@@ -7,14 +7,10 @@ function openLog() {
     const results = [];
 
     fs.createReadStream('testshort.csv')
-        .pipe(csv(['Time/Type', 'PlayerID', 'SourceName', 'SourceFlags', 'SourceRaidFlag', 'TargetID', 'TargetName', 'TargetFlags', 'TargetRaidFlags', 'SpellID', 'SpellName', 'spellSchool']))
+        .pipe(csv(['Time/Type', 'PlayerID', 'SourceName', 'SourceFlags', 'SourceRaidFlag', 'TargetID', 'TargetName', 'TargetFlags', 'TargetRaidFlags', 'SpellID', 'SpellName', 'spellSchool', 'amount', 'p15', 'p16', 'p17', 'p18', 'p19', 'p20', 'p21', 'p22', 'p23', 'p24']))
         .on('data', (data) => results.push(data))
         .on('end', () => {
             console.log(results);
-            // [
-            //   { NAME: 'Daffy Duck', AGE: '24' },
-            //   { NAME: 'Bugs Bunny', AGE: '22' }
-            // ]
         });
 }
 
