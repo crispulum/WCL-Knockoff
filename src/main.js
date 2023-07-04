@@ -63,9 +63,51 @@ function parseEncounter(inputData) {
 
 
     const outputResults = {}
-    inputData.forEach((element => {
+    const resolvers = {
+        SPELL_DAMAGE: (element) => {
+            if (!outputResults[element['SourceName']]) {
+                outputResults[element['SourceName']] = { damage: 0, healing: 0, dead: false };
+            }
+
+            outputResults[element['SourceName']].damage += Number(element['amount']);
+
+            if (Number(element['overkill']) > 0) {
+                if (!outputResults[element['TargetName']]) {
+                    outputResults[element['TargetName']] = { damage: 0, healing: 0, dead: true };
+                } else {
+                    outputResults[element['TargetName']].dead = true;
+                }
+            }
+        },
+        SPELL_PERIODIC_DAMAGE: (element) => {
+            if (!outputResults[element['SourceName']]) {
+                outputResults[element['SourceName']] = { damage: 0, healing: 0, dead: false };
+            }
+
+            outputResults[element['SourceName']].damage += Number(element['amount']);
+
+            if (Number(element['overkill']) > 0) {
+                if (!outputResults[element['TargetName']]) {
+                    outputResults[element['TargetName']] = { damage: 0, healing: 0, dead: true };
+                } else {
+                    outputResults[element['TargetName']].dead = true;
+                }
+            }
+        },
+
+        HEAL: (element) => {
+            if (!outputResults[element['SourceName']]) {
+                outputResults[element['SourceName']] = { damage: 0, healing: 0, dead: false };
+            }
+
+            outputResults[element['SourceName']].healing += Number(element['amount']);
+        }
+    };
 
 
+    /* inputData.forEach((element => {
+
+        //condition 1
         if (element['Type'].includes("DAMAGE")) {
             //handle damage event
 
@@ -94,7 +136,7 @@ function parseEncounter(inputData) {
         //check if it killed someone
 
 
-
+        //condition 2
         if (element['Type'].includes("HEAL")) {
             //handle healing event
 
@@ -112,8 +154,17 @@ function parseEncounter(inputData) {
         }
 
 
-    }))
+    })) */
     //console.log(nameArray)
+
+    inputData.forEach((element) => {
+        const eventType = element['Type'];
+
+        if (resolvers[eventType]) {
+            resolvers[eventType](element);
+        }
+    });
+
     console.log(outputResults);
     return outputResults;
 
