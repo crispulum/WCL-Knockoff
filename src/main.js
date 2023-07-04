@@ -1,4 +1,4 @@
-function openLog(callback) {
+/* function openLog(callback) {
 
     //inputs: the file name, I guess?
     //outputs: an array of objects
@@ -16,37 +16,47 @@ function openLog(callback) {
         });
 
 
+} */
+
+function openLogAndPreProcess(callback, fileName) {
+
+
+    const csv = require('csv-parser')
+    const fs = require('fs')
+    const results = [];
+
+    fs.readFile(fileName, 'utf8', (err, csvData) => {
+        if (err) {
+            //handle errors lol
+        }
+        csvData = csvData.replace(/  /g, ',');
+        //console.log(csvData)
+
+        fs.writeFile(fileName, csvData, 'utf8', err => {
+            if (err) {
+                // Handle any errors that occur during the file write
+                console.error(err);
+                return;
+            }
+
+            console.log('File saved successfully.');
+        });
+    })
+
+
+    fs.createReadStream(fileName)
+        .pipe(csv(['Time', 'Type', 'PlayerID', 'SourceName', 'SourceFlags', 'SourceRaidFlag', 'TargetID', 'TargetName', 'TargetFlags', 'TargetRaidFlags', 'SpellID', 'SpellName', 'spellSchool', 'p14', 'p15', 'p16', 'p17', 'p18', 'p19', 'p20', 'p21', 'p22', 'p23', 'p24'
+            , 'p25', 'p26', 'p27', 'mapID', 'p29', 'p30', 'amount', 'rawAmount', 'overkill', 'school', 'resisted', 'blocked', 'absorbed', 'critical', 'glancing', 'crushing']))
+        .on('data', (data) => results.push(data))
+        .on('end', () => {
+            //console.log(results);
+            return callback(results);
+        });
+
 }
 
 
 
-
-
-//openLog();
-
-
-/* function myOpenLog() {
-
-    const fs = require('fs');
-
-    fs.readFile('/home/ari/WCL-Knockoff/src/testlog.csv', 'utf8', (err, data) => {
-        if (err) throw err;
-
-        processCSVData(data);
-    });
-}
-
-
-function processCSVData(csvData) {
-
-    const lines = csvData.split('\n');
-    const headers = ['Time/Type', 'PlayerID', 'SourceName', 'SourceFlags', 'SourceRaidFlag', 'TargetID', 'TargetName', 'TargetFlags', 'TargetRaidFlags', 'SpellID', 'SpellName', 'spellSchool', 'p14', 'p15', 'p16', 'p17', 'p18', 'p19', 'p20', 'p21', 'p22', 'p23', 'p24'
-    , 'p25', 'p26', 'p27', 'mapID', 'p29', 'p30', 'amount', 'rawAmount', 'overkill', 'school', 'resisted', 'blocked', 'absorbed', 'critical', 'glancing', 'crushing'];
-
-
-}
-myOpenLog();
- */
 function parseEncounter(inputData) {
     //inputs: an event log corresponding to a single encounter?
     //outputs: the parsed data. an object?
@@ -56,7 +66,7 @@ function parseEncounter(inputData) {
     inputData.forEach((element => {
 
 
-        if (element['TimeType'].includes("DAMAGE")) {
+        if (element['Type'].includes("DAMAGE")) {
             //handle damage event
 
             //if player already doesn't yet
@@ -85,7 +95,7 @@ function parseEncounter(inputData) {
 
 
 
-        if (element['TimeType'].includes("HEAL")) {
+        if (element['Type'].includes("HEAL")) {
             //handle healing event
 
             //if player already doesn't yet
@@ -110,7 +120,10 @@ function parseEncounter(inputData) {
 }
 
 //openLog(parseEncounter);
-console.log(openLog(parseEncounter) + " is main CL")
+//console.log(openLog(parseEncounter) + " is main CL")
+//what the heck is an async
+
+openLogAndPreProcess(parseEncounter, 'testshort.csv')
 
 
 function visualizeData() {
