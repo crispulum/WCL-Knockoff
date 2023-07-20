@@ -1,3 +1,9 @@
-so the premise of this project is to slowly approximate a knockoff of WarcraftLogs. Unfortunately, the scope of this project is well beyond my capabilities in a lot of ways. That's fine. I'm just going to walk the scope back to what's achievable.
+notes on formatting:
 
-It's categorically off the table to do nuanced things that WCL does like track healing to a specific target by ability & actor. I'd need actual databases for that, which is beyond me for the moment. Instead, I just want to track healing totals, damage totals, and damage taken totals. 
+
+there are a lot of parameters. it's bad.
+
+'Time', 'Type', 'PlayerID', 'SourceName', 'SourceFlags', 'SourceRaidFlag', 'TargetID', 'TargetName', 'TargetFlags', 'TargetRaidFlags', 'SpellID', 'SpellName', 'spellSchool', 'p14', 'p15', 'p16', 'p17', 'p18', 'p19', 'p20', 'p21', 'p22', 'p23', 'p24'
+            , 'p25', 'p26', 'p27', 'mapID', 'p29', 'p30', 'amount', 'rawAmount', 'overkill', 'school', 'resisted', 'blocked', 'absorbed', 'critical', 'glancing', 'crushing'
+
+            I wonder if I can normalize them somehow?
